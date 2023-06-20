@@ -166,18 +166,25 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             result.success("success")
         } 
         else if (call.method == "shareWhatsapp") {
+            Log.w("WhatsApp", "Step 1")
+
             //shares content on WhatsApp
             val content: String? = call.argument("content")
             val whatsappIntent = Intent(Intent.ACTION_SEND)
             whatsappIntent.type = "text/plain"
             whatsappIntent.setPackage("com.whatsapp")
             whatsappIntent.putExtra(Intent.EXTRA_TEXT, content)
+
+            Log.w("WhatsApp", "Step 2")
+
             try {
                 activity!!.startActivity(whatsappIntent)
                 result.success("success")
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")
             }
+
+            Log.w("WhatsApp", "Step 3")
         } else if (call.method == "shareSms") {
             //shares content on sms
             val content: String? = call.argument("message")

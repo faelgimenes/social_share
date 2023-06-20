@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -177,9 +178,35 @@ class SocialShare {
     return version;
   }
 
-  static Future<String?> shareWhatsapp(String content) async {
-    final Map<String, dynamic> args = <String, dynamic>{"content": content};
+  static Future<String?> shareWhatsapp(String contentText,
+      {String? imagePath}) async {
+    Map<String, dynamic> args;
+
+    if (kDebugMode) {
+      print('Start Whatsapp method.');
+    }
+
+    var _imagePath = imagePath;
+    if (Platform.isAndroid) {
+      if (imagePath != null) {
+        var stickerFilename = "stickerAsset.png";
+        await reSaveImage(imagePath, stickerFilename);
+        _imagePath = stickerFilename;
+      }
+    }
+
+    args = <String, dynamic>{"image": _imagePath, "content": contentText};
+
+    if (kDebugMode) {
+      print('Whatsapp invoked.');
+    }
+
     final String? version = await _channel.invokeMethod('shareWhatsapp', args);
+
+    if (kDebugMode) {
+      print('Whatsapp returned.');
+    }
+
     return version;
   }
 
